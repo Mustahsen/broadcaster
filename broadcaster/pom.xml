@@ -11,6 +11,18 @@
 
     <groupId>com.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster</artifactId>
+    <version>${parent.version}</version>
 
+    <name>Broadcaster</name>
+    <description>Broadcaster Main Library</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
