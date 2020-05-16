@@ -15,7 +15,7 @@
         <module>broadcaster-spring-boot-autoconfigure</module>
     </modules>
 
-    <name>Broadcaster Parent Project</name>
+    <name>Broadcaster Spring Boot Parent Project</name>
     <description>AOP based broadcast wrapper for Kafka Producer</description>
 
     <developers>
@@ -57,7 +57,7 @@
         <!--Tools-->
         <lombok.version>1.18.8</lombok.version>
         <log4j2.version>2.11.2</log4j2.version>
-        <jackson-bom.version>2.11.0</jackson-bom.version>
+        <jackson.version>2.11.0</jackson.version>
 
         <!--Test-->
         <powermock.version>2.0.2</powermock.version>
@@ -86,12 +86,6 @@
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-autoconfigure</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
@@ -103,15 +97,51 @@
             </dependency>
 
             <dependency>
-                <groupId>com.mustahsen.broadcaster</groupId>
-                <artifactId>broadcaster</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-framework.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mustahsen.broadcaster</groupId>
-                <artifactId>broadcaster-spring-boot-autoconfigure</artifactId>
-                <version>${project.version}</version>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring-framework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectjweaver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring-kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka-clients.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
 
             <dependency>

@@ -31,6 +31,7 @@
         <dependency>
             <groupId>com.mustahsen.broadcaster</groupId>
             <artifactId>broadcaster</artifactId>
+            <version>0.0.1</version>
         </dependency>
 
         <dependency>
