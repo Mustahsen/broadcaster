@@ -56,7 +56,6 @@
 
         <!--Tools-->
         <lombok.version>1.18.8</lombok.version>
-        <log4j2.version>2.11.2</log4j2.version>
         <jackson.version>2.11.0</jackson.version>
 
         <!--Test-->
@@ -142,6 +141,20 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito2</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>

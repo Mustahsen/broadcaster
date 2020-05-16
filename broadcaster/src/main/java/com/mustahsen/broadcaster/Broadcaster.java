@@ -24,7 +24,13 @@ public class Broadcaster {
         if ((Boolean) broadcasterConfiguration.get(KAFKA_ENABLED)) {
             kafkaEnabled = Boolean.TRUE;
             kafkaProducer = new KafkaProducer(broadcasterConfiguration);
+        } else {
+            kafkaEnabled = Boolean.FALSE;
         }
+    }
+
+    public void broadcast() {
+        log.info("Broadcaster");
     }
 
 }
