@@ -44,7 +44,7 @@
         <maven.plugin.release.version>2.5.3</maven.plugin.release.version>
 
         <!-- Spring Versions -->
-        <spring-framework.version>5.2.6.RELEASE</spring-framework.version>
+        <spring-framework.version>5.2.3.RELEASE</spring-framework.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
 
         <!--Kafka-->
@@ -62,6 +62,24 @@
         <!--Test-->
         <powermock.version>2.0.2</powermock.version>
     </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -82,7 +100,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-configuration-processor</artifactId>
                 <version>${spring-boot.version}</version>
-                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mustahsen.broadcaster</groupId>
+                <artifactId>broadcaster</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mustahsen.broadcaster</groupId>
+                <artifactId>broadcaster-spring-boot-autoconfigure</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -90,13 +119,6 @@
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring-boot.version}</version>
                 <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.mustahsen.broadcaster</groupId>
-                <artifactId>broadcaster</artifactId>
-                <version>${project.version}</version>
-                <optional>true</optional>
             </dependency>
 
         </dependencies>
@@ -180,6 +202,12 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${maven.plugin.release.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

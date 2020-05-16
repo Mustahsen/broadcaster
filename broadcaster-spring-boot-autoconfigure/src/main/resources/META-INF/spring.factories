@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.mustahsen.broadcaster.autoconfigure.BroadcasterAutoConfiguration

@@ -11,7 +11,7 @@
 
     <groupId>com.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster-spring-boot-autoconfigure</artifactId>
-    <version>${parent.version}</version>
+    <version>0.0.1</version>
 
     <name>Broadcaster Spring Boot Autoconfigure Project</name>
     <description>Spring Boot autoconfigure project for Broadcaster Library</description>
@@ -36,8 +36,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot.version}</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -47,6 +45,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
