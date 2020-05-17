@@ -3,7 +3,7 @@ package com.mustahsen.broadcaster.aspect;
 import com.mustahsen.broadcaster.Broadcaster;
 import com.mustahsen.broadcaster.annotation.Broadcast;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,12 @@ public class BroadcastAspect {
     }
 
     @Around(value = "@annotation(broadcast)")
-    public void broadcastAfter(JoinPoint joinPoint, Broadcast broadcast) {
-        log.info(joinPoint.toString());
-        log.info("BroadcastAspect");
+    public void process(ProceedingJoinPoint proceedingJoinPoint, Broadcast broadcast) throws Throwable {
+        log.info(proceedingJoinPoint.toString());
+        proceedingJoinPoint.proceed();
+        log.info("process");
+        //((org.aspectj.lang.reflect.MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames()
         broadcaster.broadcast();
     }
+
 }
