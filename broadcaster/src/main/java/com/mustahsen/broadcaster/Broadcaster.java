@@ -43,9 +43,6 @@ public class Broadcaster {
             Long key = getKey(broadcast, argumentMap, returnValue, throwable);
             Map<String, Object> valueMap = getValues(broadcast, argumentMap, returnValue, throwable);
             kafkaProducer.produce(broadcast.target(), key, valueMap);
-
-
-
         }
 
 
