@@ -8,7 +8,6 @@ import com.mustahsen.broadcaster.factory.ResolverFactory;
 import com.mustahsen.broadcaster.producer.KafkaProducer;
 import com.mustahsen.broadcaster.resolver.IResolver;
 import com.mustahsen.broadcaster.utils.BeanUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.utils.Bytes;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +17,6 @@ import java.util.Objects;
 
 import static com.mustahsen.broadcaster.configuration.BroadcasterConfigurationParameters.KAFKA_ENABLED;
 
-@Slf4j
 public class Broadcaster {
 
     private BroadcasterConfiguration broadcasterConfiguration;
@@ -51,7 +49,7 @@ public class Broadcaster {
         if (Objects.isNull(broadcast.key())) {
             return null;
         }
-        Object key = BeanUtils.getBean(ResolverFactory.class).getResolver(broadcast.key().source()).resolve(broadcast.key(), argumentMap);
+        Object key = BeanUtils.getBean(ResolverFactory.class).getResolver(broadcast.key()).resolve(broadcast.key(), argumentMap);
         if (Objects.nonNull(key)) {
             return Bytes.wrap(key.toString().getBytes());
         }
@@ -66,7 +64,7 @@ public class Broadcaster {
         Map<String, Object> valueMap = new HashMap<>();
 
         for (BroadcastField broadcastField : broadcast.values()) {
-            IResolver resolver = BeanUtils.getBean(ResolverFactory.class).getResolver(broadcastField.source());
+            IResolver resolver = BeanUtils.getBean(ResolverFactory.class).getResolver(broadcastField);
             Object object = resolver.resolve(broadcastField, argumentMap);
             if (Objects.nonNull(object)) {
                 valueMap.put(broadcastField.targetKey(), object);
