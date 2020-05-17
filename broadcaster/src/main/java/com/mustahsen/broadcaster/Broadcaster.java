@@ -4,13 +4,14 @@ import com.mustahsen.broadcaster.annotation.Broadcast;
 import com.mustahsen.broadcaster.annotation.BroadcastField;
 import com.mustahsen.broadcaster.configuration.BroadcasterConfiguration;
 import com.mustahsen.broadcaster.enums.BroadcastType;
-import com.mustahsen.broadcaster.enums.BroadcastValueSource;
+import com.mustahsen.broadcaster.factory.ResolverFactory;
 import com.mustahsen.broadcaster.producer.KafkaProducer;
+import com.mustahsen.broadcaster.resolver.IResolver;
+import com.mustahsen.broadcaster.utils.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.kafka.common.utils.Bytes;
 
 import javax.annotation.PostConstruct;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -38,77 +39,37 @@ public class Broadcaster {
         }
     }
 
-    public void broadcast(Broadcast broadcast, Map<String, Object> argumentMap, Object returnValue, Throwable throwable) {
-        if (broadcast.broadcastType().equals(BroadcastType.KAFKA)) {
-            Long key = getKey(broadcast, argumentMap, returnValue, throwable);
-            Map<String, Object> valueMap = getValues(broadcast, argumentMap, returnValue, throwable);
+    public void broadcast(Broadcast broadcast, Map<String, Object> argumentMap, Object returnValue) {
+        if (kafkaEnabled && broadcast.broadcastType().equals(BroadcastType.KAFKA)) {
+            Bytes key = getKey(broadcast, argumentMap);
+            Map<String, Object> valueMap = getValues(broadcast, argumentMap);
             kafkaProducer.produce(broadcast.target(), key, valueMap);
         }
-
-
     }
 
-    private Long getKey(Broadcast broadcast, Map<String, Object> argumentMap, Object returnValue, Throwable throwable) {
-        if (Objects.isNull(broadcast) || Objects.isNull(broadcast.broadcastKey())) {
+    private Bytes getKey(Broadcast broadcast, Map<String, Object> argumentMap) {
+        if (Objects.isNull(broadcast.key())) {
             return null;
         }
-
-        if (broadcast.broadcastKey().source().equals(BroadcastValueSource.CONSTANT)) {
-            Long key = null;
-            try {
-                key = Long.valueOf(broadcast.broadcastKey().value());
-            } catch (NumberFormatException nfe) {
-                logKeyNumberFormatException(broadcast.broadcastKey().value());
-            }
-
-            return key;
+        Object key = BeanUtils.getBean(ResolverFactory.class).getResolver(broadcast.key().source()).resolve(broadcast.key(), argumentMap);
+        if (Objects.nonNull(key)) {
+            return Bytes.wrap(key.toString().getBytes());
         }
-
-        if (broadcast.broadcastKey().source().equals(BroadcastValueSource.ARGUMENT)) {
-            Long key = null;
-            try {
-                key = Long.valueOf(argumentMap.get(broadcast.broadcastKey().value()).toString());
-            } catch (NumberFormatException nfe) {
-                logKeyNumberFormatException(argumentMap.get(broadcast.broadcastKey().value()).toString());
-            }
-
-            return key;
-        }
-
-        if (broadcast.broadcastKey().source().equals(BroadcastValueSource.RETURNING)) {
-            Long key = null;
-            try {
-                key = Long.valueOf(returnValue.toString());
-            } catch (NumberFormatException nfe) {
-                logKeyNumberFormatException(returnValue.toString());
-            }
-
-            return key;
-        }
-
         return null;
     }
 
-    private void logKeyNumberFormatException(String value) {
-        log.info("Key: {} can't be parsed to Long!", value);
-    }
-
-    private Map<String, Object> getValues(Broadcast broadcast, Map<String, Object> argumentMap, Object returnValue, Throwable throwable) {
-        Map<String, Object> valueMap = new HashMap<>();
-
-        if (Objects.isNull(broadcast)
-                || Objects.isNull(broadcast.broadcastFields())
-                || broadcast.broadcastFields().length < 1) {
+    private Map<String, Object> getValues(Broadcast broadcast, Map<String, Object> argumentMap) {
+        if (Objects.isNull(broadcast.values())) {
             return null;
         }
 
-        for (BroadcastField broadcastField : broadcast.broadcastFields()) {
-            if (broadcastField.source().equals(BroadcastValueSource.CONSTANT)) {
-                valueMap.put(broadcastField.key(), broadcastField.value());
-            } else if (broadcastField.source().equals(BroadcastValueSource.ARGUMENT)) {
-                valueMap.put(broadcastField.key(), argumentMap.get(broadcastField.key()));
-            } else if (broadcastField.source().equals(BroadcastValueSource.RETURNING)) {
-                valueMap.put(broadcastField.key(), returnValue);
+        Map<String, Object> valueMap = new HashMap<>();
+
+        for (BroadcastField broadcastField : broadcast.values()) {
+            IResolver resolver = BeanUtils.getBean(ResolverFactory.class).getResolver(broadcastField.source());
+            Object object = resolver.resolve(broadcastField, argumentMap);
+            if (Objects.nonNull(object)) {
+                valueMap.put(broadcastField.targetKey(), object);
             }
         }
 

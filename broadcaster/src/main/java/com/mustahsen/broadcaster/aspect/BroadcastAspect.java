@@ -29,9 +29,9 @@ public class BroadcastAspect {
         Map<String, Object> argumentMap = getArgumentMap(proceedingJoinPoint);
 
         try {
-            broadcaster.broadcast(broadcast, argumentMap, proceedingJoinPoint.proceed(), null);
+            broadcaster.broadcast(broadcast, argumentMap, proceedingJoinPoint.proceed());
         } catch (Throwable throwable) {
-            broadcaster.broadcast(broadcast, argumentMap, null, throwable);
+            throwable.printStackTrace();
         }
     }
 
