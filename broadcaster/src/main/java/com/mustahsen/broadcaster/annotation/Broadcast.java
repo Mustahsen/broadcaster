@@ -13,6 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Broadcast {
 
     BroadcastType broadcastType() default BroadcastType.KAFKA;
+    String target() default "";
     BroadcastKey broadcastKey() default @BroadcastKey(active = false, value = "");
     BroadcastField[] broadcastFields() default {};
 

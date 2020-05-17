@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>broadcaster-parent</artifactId>
+        <artifactId>broadcaster</artifactId>
         <groupId>com.mustahsen</groupId>
         <version>0.0.1</version>
     </parent>
@@ -12,7 +12,7 @@
     <groupId>com.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster</artifactId>
     <version>0.0.1</version>
-
+    <packaging>jar</packaging>
     <name>Broadcaster Spring Boot Project</name>
     <description>Broadcaster Spring Boot Project</description>
 
@@ -54,6 +54,17 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
         </dependency>
@@ -75,11 +86,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

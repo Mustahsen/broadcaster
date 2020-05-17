@@ -9,6 +9,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Aspect
 @Component
@@ -22,12 +25,25 @@ public class BroadcastAspect {
     }
 
     @Around(value = "@annotation(broadcast)")
-    public void process(ProceedingJoinPoint proceedingJoinPoint, Broadcast broadcast) throws Throwable {
-        log.info(proceedingJoinPoint.toString());
-        proceedingJoinPoint.proceed();
-        log.info("process");
-        //((org.aspectj.lang.reflect.MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames()
-        broadcaster.broadcast();
+    public void process(ProceedingJoinPoint proceedingJoinPoint, Broadcast broadcast) {
+        Map<String, Object> argumentMap = getArgumentMap(proceedingJoinPoint);
+
+        try {
+            broadcaster.broadcast(broadcast, argumentMap, proceedingJoinPoint.proceed(), null);
+        } catch (Throwable throwable) {
+            broadcaster.broadcast(broadcast, argumentMap, null, throwable);
+        }
     }
+
+    private Map<String, Object> getArgumentMap(ProceedingJoinPoint proceedingJoinPoint) {
+        Map<String, Object> argumentMap = new HashMap<>();
+        Object[] parameterValues = proceedingJoinPoint.getArgs();
+        String[] parameterNames = ((org.aspectj.lang.reflect.MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames();
+        for (int i = 0; i < parameterNames.length; ++i) {
+            argumentMap.put(parameterNames[i], parameterValues[i]);
+        }
+        return argumentMap;
+    }
+
 
 }

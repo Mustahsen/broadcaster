@@ -1,5 +1,5 @@
 package com.mustahsen.broadcaster.enums;
 
 public enum BroadcastValueSource {
-    ARGUMENT, CONSTANT, RETURNING
+    ARGUMENT, CONSTANT, RETURNING, THROWABLE
 }
