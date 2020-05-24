@@ -1,0 +1,5 @@
+broadcaster:
+  kafka-enabled: true
+  kafka-producer:
+    server:
+      addresses: localhost:9092
