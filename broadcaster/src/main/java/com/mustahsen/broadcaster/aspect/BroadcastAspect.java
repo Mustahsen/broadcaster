@@ -31,7 +31,7 @@ public class BroadcastAspect {
         try {
             broadcaster.broadcast(broadcast, argumentMap, proceedingJoinPoint.proceed());
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            log.info("An error occurred during broadcast : " + broadcast.toString(), throwable);
         }
     }
 
@@ -44,6 +44,5 @@ public class BroadcastAspect {
         }
         return argumentMap;
     }
-
 
 }

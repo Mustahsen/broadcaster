@@ -1,8 +1,7 @@
-package com.mustahsen.broadcaster.producer;
+package com.mustahsen.broadcaster.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mustahsen.broadcaster.configuration.BroadcasterConfiguration;
-import com.mustahsen.broadcaster.listener.KafkaProducerCallbackListener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -29,25 +28,26 @@ import static com.mustahsen.broadcaster.configuration.BroadcasterConfigurationPa
 @Slf4j
 public class KafkaProducer {
 
-    private Map<String, Object> kafkaProperties;
-    private ProducerFactory<Bytes, Object> producerFactory;
     private KafkaTemplate<Bytes, Object> kafkaTemplate;
 
     public KafkaProducer(BroadcasterConfiguration broadcasterConfiguration) {
-        this.kafkaProperties = new HashMap<>();
-        this.kafkaProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broadcasterConfiguration.get(KAFKA_SERVER_ADDRESSES));
-        this.kafkaProperties.put(ProducerConfig.RETRIES_CONFIG, broadcasterConfiguration.get(KAFKA_RETRIES));
-        this.kafkaProperties.put(ProducerConfig.BATCH_SIZE_CONFIG, broadcasterConfiguration.get(KAFKA_BATCH_SIZE));
-        this.kafkaProperties.put(ProducerConfig.LINGER_MS_CONFIG, broadcasterConfiguration.get(KAFKA_LINGER_MS));
-        this.kafkaProperties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, broadcasterConfiguration.get(KAFKA_BUFFER_MEMORY));
-        this.kafkaProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, broadcasterConfiguration.get(KAFKA_MAX_BLOCK_MS));
-        this.kafkaProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, BytesSerializer.class);
-        this.kafkaProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        this.producerFactory = new DefaultKafkaProducerFactory<>(this.kafkaProperties, new BytesSerializer(), new JsonSerializer(new ObjectMapper()));
+        Map<String, Object> kafkaProperties = new HashMap<>();
+        kafkaProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broadcasterConfiguration.get(KAFKA_SERVER_ADDRESSES));
+        kafkaProperties.put(ProducerConfig.RETRIES_CONFIG, broadcasterConfiguration.get(KAFKA_RETRIES));
+        kafkaProperties.put(ProducerConfig.BATCH_SIZE_CONFIG, broadcasterConfiguration.get(KAFKA_BATCH_SIZE));
+        kafkaProperties.put(ProducerConfig.LINGER_MS_CONFIG, broadcasterConfiguration.get(KAFKA_LINGER_MS));
+        kafkaProperties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, broadcasterConfiguration.get(KAFKA_BUFFER_MEMORY));
+        kafkaProperties.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, broadcasterConfiguration.get(KAFKA_MAX_BLOCK_MS));
+        kafkaProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, BytesSerializer.class);
+        kafkaProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+        ProducerFactory<Bytes, Object> producerFactory = new DefaultKafkaProducerFactory<>(kafkaProperties,
+                new BytesSerializer(), new JsonSerializer(new ObjectMapper()));
+
         this.kafkaTemplate = new KafkaTemplate<>(producerFactory);
     }
 
-    public void produce(String topic, Bytes key, Map<String, Object> valueMap) {
+    public void produce(String topic, Object partitionKey, Map<String, Object> bodyPairs) {
         if (StringUtils.isBlank(topic)) {
             log.info("Topic: {} can't be blank!", topic);
             return;
@@ -55,10 +55,10 @@ public class KafkaProducer {
 
         ListenableFuture<SendResult<Bytes, Object>> future;
 
-        if (Objects.isNull(key)) {
-            future = kafkaTemplate.send(topic, valueMap);
+        if (Objects.isNull(partitionKey)) {
+            future = kafkaTemplate.send(topic, bodyPairs);
         } else {
-            future = kafkaTemplate.send(topic, key, valueMap);
+            future = kafkaTemplate.send(topic, Bytes.wrap(partitionKey.toString().getBytes()), bodyPairs);
         }
 
         future.addCallback(new KafkaProducerCallbackListener());

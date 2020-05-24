@@ -1,8 +1,6 @@
 package com.mustahsen.broadcaster.resolver;
 
 import com.mustahsen.broadcaster.annotation.BroadcastPair;
-import com.mustahsen.broadcaster.exception.InvalidArgumentMapException;
-import com.mustahsen.broadcaster.exception.InvalidBroadcastAnnotationException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ArgumentResolver extends BaseResolver {
+public class ReturnValueResolver extends BaseResolver {
+
+    private static final String RETURN_VALUE_REFERENCE_STRING = "this";
 
     @Override
     public Object getResolvable(List<String> propertyAccessors,
@@ -20,15 +20,13 @@ public class ArgumentResolver extends BaseResolver {
                                 Object object) {
 
         if (CollectionUtils.isEmpty(propertyAccessors)) {
-            return null;
-        } else if (propertyAccessors.size() == 1) {
-            Object resolvable = argumentMap.getOrDefault(propertyAccessors.get(0), null);
+            return returnValue;
+        } else if (propertyAccessors.size() == 1 && propertyAccessors.get(0).equals(RETURN_VALUE_REFERENCE_STRING)) {
             propertyAccessors.clear();
-            return resolvable;
-        } else if (propertyAccessors.size() > 1) {
-            Object resolvable = argumentMap.getOrDefault(propertyAccessors.get(0), null);
+            return returnValue;
+        } else if (propertyAccessors.size() > 1 && propertyAccessors.get(0).equals(RETURN_VALUE_REFERENCE_STRING)) {
             propertyAccessors.remove(0);
-            return resolvable;
+            return returnValue;
         } else {
             return returnValue;
         }
@@ -38,6 +36,6 @@ public class ArgumentResolver extends BaseResolver {
     public void validateResolverArguments(BroadcastPair broadcastPair, Map<String, Object> argumentMap, Object returnValue, Object object)
             throws RuntimeException {
         validateBroadcastAnnotation(broadcastPair);
-        validateArgumentMap(argumentMap);
+        validateObject(returnValue, "returnValue");
     }
 }

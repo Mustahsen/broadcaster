@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ConstantResolver extends BaseResolver {
+public class FallbackResolver extends BaseResolver {
 
     @Override
     public Object getResolvable(List<String> propertyAccessors,
@@ -16,13 +16,12 @@ public class ConstantResolver extends BaseResolver {
                                 Object returnValue,
                                 Object object) {
 
-        return broadcastPair.value();
+        return null;
     }
 
     @Override
     public void validateResolverArguments(BroadcastPair broadcastPair, Map<String, Object> argumentMap, Object returnValue, Object object)
             throws RuntimeException {
-        validateBroadcastAnnotation(broadcastPair);
         validateObject(broadcastPair.value(), "broadcastPair.value");
     }
 }

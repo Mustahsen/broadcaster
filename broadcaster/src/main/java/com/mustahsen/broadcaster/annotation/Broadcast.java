@@ -5,6 +5,7 @@ import com.mustahsen.broadcaster.enums.BroadcastType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static com.mustahsen.broadcaster.enums.BroadcastType.KAFKA;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -12,9 +13,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(value = RUNTIME)
 public @interface Broadcast {
 
-    BroadcastType broadcastType() default BroadcastType.KAFKA;
+    BroadcastType type() default KAFKA;
     String target() default "";
-    BroadcastField key() default @BroadcastField(sourceValue = "", targetKey = "");
-    BroadcastField[] values() default {};
 
+    BroadcastPair collection();
+    BroadcastPair partitionKey() default @BroadcastPair(value = "", key = "");
+    BroadcastPair[] body() default {};
 }

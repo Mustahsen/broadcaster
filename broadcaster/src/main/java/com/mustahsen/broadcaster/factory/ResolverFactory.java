@@ -1,10 +1,12 @@
 package com.mustahsen.broadcaster.factory;
 
-import com.mustahsen.broadcaster.annotation.BroadcastField;
+import com.mustahsen.broadcaster.annotation.BroadcastPair;
 import com.mustahsen.broadcaster.resolver.ArgumentResolver;
-import com.mustahsen.broadcaster.resolver.BaseResolver;
 import com.mustahsen.broadcaster.resolver.ConstantResolver;
+import com.mustahsen.broadcaster.resolver.FallbackResolver;
 import com.mustahsen.broadcaster.resolver.IResolver;
+import com.mustahsen.broadcaster.resolver.ObjectResolver;
+import com.mustahsen.broadcaster.resolver.ReturnValueResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,29 +15,35 @@ public class ResolverFactory {
 
     private ArgumentResolver argumentResolver;
     private ConstantResolver constantResolver;
-    private BaseResolver baseResolver;
+    private ReturnValueResolver returnValueResolver;
+    private ObjectResolver objectResolver;
+    private FallbackResolver fallbackResolver;
 
     @Autowired
     public ResolverFactory(ArgumentResolver argumentResolver,
                            ConstantResolver constantResolver,
-                           BaseResolver baseResolver) {
+                           ReturnValueResolver returnValueResolver,
+                           ObjectResolver objectResolver,
+                           FallbackResolver fallbackResolver) {
         this.argumentResolver = argumentResolver;
         this.constantResolver = constantResolver;
-        this.baseResolver = baseResolver;
+        this.returnValueResolver = returnValueResolver;
+        this.objectResolver = objectResolver;
+        this.fallbackResolver = fallbackResolver;
     }
 
-
-
-    public IResolver getResolver(BroadcastField broadcastField) {
-        switch (broadcastField.source()) {
+    public IResolver getResolver(BroadcastPair broadcastPair) {
+        switch (broadcastPair.valueSource()) {
             case ARGUMENT:
                 return argumentResolver;
             case CONSTANT:
                 return constantResolver;
-            case CUSTOM:
-                return broadcastField.customResolver().cast(BaseResolver.class);
+            case RETURN_VALUE:
+                return returnValueResolver;
+            case OBJECT:
+                return objectResolver;
             default:
-                return baseResolver;
+                return fallbackResolver;
         }
     }
 }

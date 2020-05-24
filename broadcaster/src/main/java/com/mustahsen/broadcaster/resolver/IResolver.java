@@ -1,45 +1,69 @@
 package com.mustahsen.broadcaster.resolver;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
+import com.mustahsen.broadcaster.annotation.BroadcastPair;
+import com.mustahsen.broadcaster.exception.InvalidArgumentMapException;
+import com.mustahsen.broadcaster.exception.InvalidBroadcastAnnotationException;
+import com.mustahsen.broadcaster.exception.NullObjectException;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
 
 public interface IResolver {
 
-    String EMPTY_STRING = "";
-    String DOT_REGEX = "\\.";
+    default Object resolve(Object... arguments) throws InvalidBroadcastAnnotationException, InvalidArgumentMapException {
+        BroadcastPair broadcastPair = resolveBroadcastAnnotation(arguments);
+        Map<String, Object> argumentMap = resolveArguments(arguments);
+        Object returnValue = resolveReturnValue(arguments);
+        Object object = resolveObject(arguments);
 
-    Object resolve(Object... arguments);
+        validateResolverArguments(broadcastPair, argumentMap, returnValue, object);
 
-    default List<String> fields(String field) {
-        return Arrays.asList(field.split(DOT_REGEX));
+        String sourceValue = broadcastPair.value();
+        List<String> propertyAccessors = propertyAccessors(sourceValue);
+        Object resolvable = getResolvable(propertyAccessors, broadcastPair, argumentMap, returnValue, object);
+        return resolveProperty(resolvable, propertyAccessors);
     }
 
-    default Object resolveField(Object object, List<String> fields) throws IllegalAccessException {
-        if (CollectionUtils.isEmpty(fields)) {
-            return object;
-        } else if (fields.size() == 1) {
-            Optional<Field> optional = Optional.of(ReflectionUtils.findField(object.getClass(), fields.get(0)));
-            if (optional.isPresent()) {
-                Field field = optional.get();
-                field.setAccessible(true);
-                return field.get(object);
-            }
-            return null;
-        } else {
-            Optional<Field> optional = Optional.of(ReflectionUtils.findField(object.getClass(), fields.get(0)));
-            if (optional.isPresent()) {
-                Field field = optional.get();
-                field.setAccessible(true);
-                Object value = field.get(object);
-                return resolveField(value, fields.subList(1, fields.size()));
-            }
-            return null;
+    BroadcastPair resolveBroadcastAnnotation(Object... arguments);
+
+    Map<String, Object> resolveArguments(Object... arguments);
+
+    Object resolveReturnValue(Object... arguments);
+
+    Object resolveObject(Object... arguments);
+
+    void validateResolverArguments(BroadcastPair broadcastPair, Map<String, Object> argumentMap, Object returnValue, Object object)
+            throws InvalidArgumentMapException, InvalidBroadcastAnnotationException, NullPointerException;
+
+    default void validateBroadcastAnnotation(BroadcastPair broadcastPair) throws InvalidBroadcastAnnotationException {
+        if (StringUtils.isBlank(broadcastPair.value())) {
+            throw new InvalidBroadcastAnnotationException("Value can't blank!");
         }
     }
+
+    default void validateArgumentMap(Map<String, Object> argumentMap) throws InvalidArgumentMapException {
+        if (MapUtils.isEmpty(argumentMap)) {
+            throw new InvalidArgumentMapException("ArgumentMap can't be empty!");
+        }
+    }
+
+    default void validateObject(Object object, String argumentName) throws NullObjectException {
+        if (Objects.isNull(object)) {
+            throw new NullObjectException(argumentName);
+        }
+    }
+
+    List<String> propertyAccessors(String sourceValue);
+
+    Object getResolvable(List<String> propertyAccessors, BroadcastPair broadcastPair, Map<String, Object> argumentMap, Object returnValue, Object object);
+
+    Object resolveProperty(Object object, List<String> propertyAccessors);
+
+    Object resolveField(Object object, List<String> propertyAccessors);
+
+    Object resolveField(Object object, String propertyAccessor);
 
 }
