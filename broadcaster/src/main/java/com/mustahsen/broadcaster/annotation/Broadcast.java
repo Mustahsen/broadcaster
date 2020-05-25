@@ -16,7 +16,7 @@ public @interface Broadcast {
     BroadcastType type() default KAFKA;
     String target() default "";
 
-    BroadcastPair collection();
-    BroadcastPair partitionKey() default @BroadcastPair(value = "", key = "");
+    BroadcastPair collection() default @BroadcastPair;
+    BroadcastPair partitionKey() default @BroadcastPair;
     BroadcastPair[] body() default {};
 }

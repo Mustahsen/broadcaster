@@ -11,6 +11,7 @@
 
     <modules>
         <module>broadcaster</module>
+        <module>broadcaster-sample</module>
         <module>broadcaster-spring-boot-starter</module>
         <module>broadcaster-spring-boot-autoconfigure</module>
     </modules>
