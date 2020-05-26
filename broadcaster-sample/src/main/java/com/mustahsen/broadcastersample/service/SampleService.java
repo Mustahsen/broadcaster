@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.mustahsen.broadcaster.enums.BroadcastValueSource.ARGUMENT;
+import static com.mustahsen.broadcaster.enums.BroadcastValueSource.OBJECT;
 import static com.mustahsen.broadcaster.enums.BroadcastValueSource.RETURN_VALUE;
 
 @Slf4j
@@ -20,9 +21,11 @@ public class SampleService {
 
     @Broadcast(
             target = "sample-topic",
+            collection = @BroadcastPair(value = "arg3", valueSource = ARGUMENT),
             partitionKey = @BroadcastPair(value = "arg1", valueSource = ARGUMENT),
             body = {
                     @BroadcastPair(value = "arg2", key = "key1", valueSource = ARGUMENT),
+                    @BroadcastPair(value = "value", key = "keyInteger", valueSource = OBJECT),
                     @BroadcastPair(value = "innerObjectDto.innerObjectString", key = "key2", valueSource = RETURN_VALUE)
             }
     )
