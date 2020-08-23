@@ -3,6 +3,7 @@ Annotation based message queue publisher. Currently only supports Kafka.
 
 Example usage:
 
+```
 @Broadcast(
     target = "some-topic",
     collection = @BroadcastPair(value = "entityIds", valueSource = ARGUMENT),
@@ -14,5 +15,6 @@ Example usage:
         }
 )
 public returnValue someMethod(Object ...arguments) {}
+```
 
 Project contains an example broadcaster-starter usage. It is very useful when you need to try kafka publishing easily.
