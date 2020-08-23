@@ -5,13 +5,13 @@
     <parent>
         <artifactId>broadcaster-parent</artifactId>
         <groupId>com.mustahsen</groupId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster-spring-boot-starter</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <packaging>pom</packaging>
     <name>Broadcaster Spring Boot Starter Project</name>
     <description>Spring Boot starter project for Broadcaster Library</description>
@@ -26,13 +26,13 @@
         <dependency>
             <groupId>com.mustahsen.broadcaster</groupId>
             <artifactId>broadcaster-spring-boot-autoconfigure</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.mustahsen.broadcaster</groupId>
             <artifactId>broadcaster</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </dependency>
 
     </dependencies>

@@ -12,7 +12,7 @@
 
     <groupId>com.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster-sample</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>Broadcaster Spring Boot Sample Project</name>
     <description>Demo project for Spring Boot Broadcast Starter</description>
 
@@ -23,7 +23,7 @@
 
         <lombok.version>1.18.8</lombok.version>
 
-        <broadcaster.version>0.0.1</broadcaster.version>
+        <broadcaster.version>0.0.2</broadcaster.version>
     </properties>
 
     <dependencies>
@@ -57,6 +57,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
