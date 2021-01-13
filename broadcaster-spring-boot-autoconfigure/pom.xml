@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>broadcaster-parent</artifactId>
-        <groupId>com.mustahsen</groupId>
+        <groupId>com.github.mustahsen</groupId>
         <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mustahsen.broadcaster</groupId>
+    <groupId>com.github.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster-spring-boot-autoconfigure</artifactId>
     <version>0.0.2</version>
     <packaging>jar</packaging>
@@ -29,7 +29,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mustahsen.broadcaster</groupId>
+            <groupId>com.github.mustahsen.broadcaster</groupId>
             <artifactId>broadcaster</artifactId>
             <version>0.0.2</version>
             <scope>provided</scope>

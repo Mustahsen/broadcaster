@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.mustahsen.broadcaster</groupId>
+    <groupId>com.github.mustahsen.broadcaster</groupId>
     <artifactId>broadcaster-sample</artifactId>
     <version>0.0.2</version>
     <name>Broadcaster Spring Boot Sample Project</name>
@@ -46,7 +46,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mustahsen.broadcaster</groupId>
+            <groupId>com.github.mustahsen.broadcaster</groupId>
             <artifactId>broadcaster-spring-boot-starter</artifactId>
             <version>${broadcaster.version}</version>
         </dependency>
