@@ -46,7 +46,7 @@
 
         <!-- Spring Versions -->
         <spring-framework.version>5.2.3.RELEASE</spring-framework.version>
-        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <spring-boot.version>2.5.15</spring-boot.version>
 
         <!--Kafka-->
         <kafka-clients.version>2.4.0</kafka-clients.version>
